@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Limelight&display=swap");
+
+html, body {
+    height: 100%;
+}
+
+#root {
+    height: 100%;
+}
+
+.timer-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.timer-label-container {
+    display: flex;
+    justify-content: space-between
+}
+
+.timer {
+    font-family: "Limelight";
+    font-size: 80px;
+}
