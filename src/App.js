@@ -11,6 +11,7 @@ export default function App() {
         <Route path="/">
           <Route index element={<Timer />} />
           <Route path="home" element={<Navigate replace to="/" />} />
+          <Route path="nav" element={<Home />} />
         </Route>
       </Routes>
     </BrowserRouter>
