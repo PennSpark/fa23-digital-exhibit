@@ -52,13 +52,12 @@ export default function Scene({ setBg }) {
     if (sphere.current) {
       sphere.current.position.x = THREE.MathUtils.lerp(
         sphere.current.position.x,
-        hovered ? state.mouse.x / 2 : 0,
+        state.mouse.x / 4,
         0.2
       );
       sphere.current.position.y = THREE.MathUtils.lerp(
         sphere.current.position.y,
-        Math.sin(state.clock.elapsedTime / 1.5) / 6 +
-          (hovered ? state.mouse.y / 2 : 0),
+        Math.sin(state.clock.elapsedTime / 1.5) / 6 + state.mouse.y / 4,
         0.2
       );
     }
@@ -95,7 +94,8 @@ export default function Scene({ setBg }) {
       config: (n) =>
         n === "wobble" &&
         hovered && {
-          clamp: true,
+          tension: 120,
+          friction: 14,
         },
     },
     [mode, hovered, down, halfway]
