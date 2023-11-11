@@ -23,11 +23,9 @@ export default function Scene({ setBg }) {
 
   // Change cursor on hovered state
   useEffect(() => {
-    document.body.style.cursor = hovered
-      ? "none"
-      : `url('data:image/svg+xml;base64,${btoa(
-          '<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="10" fill="#E8B059"/></svg>'
-        )}'), auto`;
+    document.body.style.cursor = `url('data:image/svg+xml;base64,${btoa(
+      '<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="10" fill="#737373"/></svg>'
+    )}'), auto`;
   }, [hovered]);
 
   // Make the bubble float and follow the mouse
@@ -56,11 +54,28 @@ export default function Scene({ setBg }) {
     {
       wobble: down ? 1.2 : hovered ? 1.05 : 1,
       coat: mode && !hovered ? 0.04 : 1,
-      ambient: mode && !hovered ? 1.5 : 0.5,
+      ambient: mode && !hovered ? 1 : 1,
       env: mode && !hovered ? 0.4 : 1,
-      color: hovered ? "#623851" : mode ? "#35a480" : "white",
+      // color: hovered ? "#623851" : mode ? "#35a480" : "white",
+      color: "#c281d1",
+      config: (n) => n === "wobble" && hovered && { mass: 2.3, clamp: true },
+    },
+    [mode, hovered, down]
+  );
+
+  const [{ wobble2, coat2, color2, ambient2, env2 }] = useSpring(
+    {
+      wobble2: down ? 1.2 : hovered ? 1.05 : 1,
+      coat2: mode && !hovered ? 0.04 : 1,
+      ambient2: mode && !hovered ? 1.5 : 0.5,
+      env2: mode && !hovered ? 1 : 0.4,
+      // color2: hovered ? "#35a480" : mode ? "#35a480" : "white",
+      color2: "#42ba7f",
       config: (n) =>
-        n === "wobble" && hovered && { mass: 2, tension: 1000, friction: 10 },
+        n === "wobble" &&
+        hovered && {
+          clamp: true,
+        },
     },
     [mode, hovered, down]
   );
@@ -92,8 +107,9 @@ export default function Scene({ setBg }) {
               fill: !mode ? "#f0f0f0" : "#202020",
             });
           }}
+          position={[0, 0, -2]}
         >
-          <sphereGeometry args={[1, 64, 64]} />
+          <sphereGeometry args={[1.8, 64, 64]} />
           <AnimatedMaterial
             color={color}
             envMapIntensity={env}
@@ -102,8 +118,34 @@ export default function Scene({ setBg }) {
             metalness={0}
           />
         </a.mesh>
+        <a.mesh
+          ref={sphere}
+          scale={wobble2}
+          onPointerOver={() => setHovered(true)}
+          onPointerOut={() => setHovered(false)}
+          onPointerDown={() => setDown(true)}
+          onPointerUp={() => {
+            setDown(false);
+            // Toggle mode between dark and bright
+            setMode(!mode);
+            setBg({
+              background: !mode ? "#202020" : "#f0f0f0",
+              fill: !mode ? "#f0f0f0" : "#202020",
+            });
+          }}
+          position={[1, 1, 1]}
+        >
+          <sphereGeometry args={[0.6, 64, 64]} />
+          <AnimatedMaterial
+            color={color2}
+            envMapIntensity={env2}
+            clearcoat={coat2}
+            clearcoatRoughness={0}
+            metalness={0}
+          />
+        </a.mesh>
         {/* <Environment preset="warehouse" /> */}
-        <ContactShadows
+        {/* <ContactShadows
           rotation={[Math.PI / 2, 0, 0]}
           position={[0, -1.6, 0]}
           opacity={mode ? 0.8 : 0.4}
@@ -111,7 +153,7 @@ export default function Scene({ setBg }) {
           height={15}
           blur={10}
           far={1.6}
-        />
+        /> */}
       </Suspense>
     </>
   );
