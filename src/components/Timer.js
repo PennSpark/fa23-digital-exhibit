@@ -31,17 +31,17 @@ export default function Timer() {
   }, []);
 
   return (
-    <div className="h-screen w-screen flex justify-center items-center">
-      <div className="h-screen w-screen fixed top-0 left-0 bg-slate-500 z-0">
+    <div className="h-screen w-screen flex justify-center items-center bg-slate-400">
+      <div className="h-screen w-screen fixed top-0 left-0 z-0">
         <Scene />
       </div>
-      <div className="timer-container z-10 fixed flex justify-center items-center">
+      <div
+        className="timer-container z-10 fixed flex justify-center items-center "
+        style={{ mixBlendMode: "difference" }}
+      >
         {timer.total ? (
           <>
-            <p
-              className="timer"
-              style={{ mixBlendMode: "hue", color: "white", opacity: 0.5 }}
-            >
+            <p className="timer" style={{ color: "white", opacity: 0.7 }}>
               {timer.days} : {timer.hours} : {timer.minutes} : {timer.seconds}
             </p>
           </>

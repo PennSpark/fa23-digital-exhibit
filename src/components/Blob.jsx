@@ -1,4 +1,7 @@
 import { OrbitControls } from "@react-three/drei";
+import { EffectComposer, Noise } from "@react-three/postprocessing";
+import { BlendFunction } from "postprocessing";
+
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useCallback } from "react";
 import { Vector2, Color } from "three";
@@ -58,6 +61,9 @@ const Gradient = () => {
         uniforms={uniforms}
         wireframe={false}
       />
+      <EffectComposer>
+        <Noise premultiply blendFunction={BlendFunction.ADD} />
+      </EffectComposer>
     </mesh>
   );
 };
