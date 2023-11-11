@@ -9,7 +9,7 @@ import {
 } from "@react-three/drei";
 import { useSpring } from "@react-spring/core";
 import { a } from "@react-spring/three";
-
+import { useScroll } from "@react-spring/web";
 // React-spring animates native elements, in this case <mesh/> etc,
 // but it can also handle 3rd–party objs, just wrap them in "a".
 const AnimatedMaterial = a(MeshDistortMaterial);
@@ -20,6 +20,22 @@ export default function Scene({ setBg }) {
   const [mode, setMode] = useState(false);
   const [down, setDown] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const [halfway, setHalfway] = useState(false);
+
+  const { scrollYProgress } = useScroll({
+    onChange: ({ value: scrollYProgress }) => {
+      console.log(scrollYProgress);
+      setScroll.start({
+        scrollBig: Math.abs(1 - scrollYProgress.scrollYProgress * 2),
+        scrollSmall: Math.abs(1 - scrollYProgress.scrollYProgress * 2),
+      });
+      if (scrollYProgress.scrollYProgress > 0.5) {
+        if (!halfway) setHalfway(true);
+      } else {
+        setHalfway(false);
+      }
+    },
+  });
 
   // Change cursor on hovered state
   useEffect(() => {
@@ -48,6 +64,11 @@ export default function Scene({ setBg }) {
     }
   });
 
+  const [{ scrollBig, scrollSmall }, setScroll] = useSpring(() => ({
+    scrollBig: 1.8,
+    scrollSmall: 0.6,
+  }));
+
   // Springs for color and overall looks, this is state-driven animation
   // React-spring is physics based and turns static props into animated values
   const [{ wobble, coat, color, ambient, env }] = useSpring(
@@ -57,10 +78,10 @@ export default function Scene({ setBg }) {
       ambient: mode && !hovered ? 1 : 1,
       env: mode && !hovered ? 0.4 : 1,
       // color: hovered ? "#623851" : mode ? "#35a480" : "white",
-      color: "#c281d1",
+      color: halfway ? "white" : "#6b3c58",
       config: (n) => n === "wobble" && hovered && { mass: 2.3, clamp: true },
     },
-    [mode, hovered, down]
+    [mode, hovered, down, halfway]
   );
 
   const [{ wobble2, coat2, color2, ambient2, env2 }] = useSpring(
@@ -70,14 +91,14 @@ export default function Scene({ setBg }) {
       ambient2: mode && !hovered ? 1.5 : 0.5,
       env2: mode && !hovered ? 1 : 0.4,
       // color2: hovered ? "#35a480" : mode ? "#35a480" : "white",
-      color2: "#42ba7f",
+      color2: halfway ? "white" : "#42ba7f",
       config: (n) =>
         n === "wobble" &&
         hovered && {
           clamp: true,
         },
     },
-    [mode, hovered, down]
+    [mode, hovered, down, halfway]
   );
 
   return (
@@ -94,7 +115,7 @@ export default function Scene({ setBg }) {
       <Suspense fallback={null}>
         <a.mesh
           ref={sphere}
-          scale={wobble}
+          scale={scrollBig}
           onPointerOver={() => setHovered(true)}
           onPointerOut={() => setHovered(false)}
           onPointerDown={() => setDown(true)}
@@ -109,7 +130,7 @@ export default function Scene({ setBg }) {
           }}
           position={[0, 0, -2]}
         >
-          <sphereGeometry args={[1.8, 64, 64]} />
+          <sphereGeometry args={[2.5, 64, 64]} />
           <AnimatedMaterial
             color={color}
             envMapIntensity={env}
@@ -120,7 +141,7 @@ export default function Scene({ setBg }) {
         </a.mesh>
         <a.mesh
           ref={sphere}
-          scale={wobble2}
+          scale={scrollSmall}
           onPointerOver={() => setHovered(true)}
           onPointerOut={() => setHovered(false)}
           onPointerDown={() => setDown(true)}
