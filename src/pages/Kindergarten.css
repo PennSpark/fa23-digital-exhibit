@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Limelight&family=Yomogi&display=swap');
+
+.kindergarten-bg {
+    background-color: #F3EDD6;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.kin-title {
+    font-family: "Yomogi";
+    font-size: 40px;
+    font-weight: 800;
+}
+
+.kin-subtitle {
+    font-family: "Yomogi";
+    font-size: 20px;
+}
