@@ -159,12 +159,17 @@ const Exhibits = () => {
       offset: [dx, dy],
       velocity: [vx, vy],
       direction: [dirX, dirY],
+      dragging,
     }) => {
+      console.log(down, dragging);
       if (down) {
-        scaleApi.start({
-          scale: 0.85,
-          scaleLess: 0.9,
-        });
+        if (dragging) {
+          scaleApi.start({
+            scale: 0.85,
+            scaleLess: 0.9,
+          });
+        }
+
         if (!mouseDown) setMouseDown(true);
       } else {
         scaleApi.start({
@@ -189,11 +194,12 @@ const Exhibits = () => {
     {
       bounds: {
         left: -screen.width * 0.125,
-        top: -screen.height * 0.25,
+        top: -screen.height * 0.2,
         right: screen.width * 0.125,
         bottom: 0,
       },
       rubberband: true,
+      threshold: 10,
     }
   );
 
