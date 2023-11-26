@@ -5,6 +5,7 @@ import "./App.css";
 import Home from "./pages/Home";
 import Nascent from "./pages/Nascent.jsx";
 import Kindergarten from "./pages/Kindergarten.jsx";
+import Teen from "./pages/Teen.jsx";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="nav" element={<Home />} />
           <Route path="nascent" element={<Nascent />} />
           <Route path="kindergarten" element={<Kindergarten />} />
+          <Route path="teen" element={<Teen />} />
         </Route>
       </Routes>
     </BrowserRouter>
